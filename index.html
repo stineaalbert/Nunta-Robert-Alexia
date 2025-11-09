@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Seating Finder</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState } = React;
+        const { Search, MapPin, Users, Heart } = lucide;
+
+        function WeddingSeatFinder() {
+          const [searchName, setSearchName] = useState('');
+          const [foundGuest, setFoundGuest] = useState(null);
+          const [notFound, setNotFound] = useState(false);
+
+          // CUSTOMIZE THIS WITH YOUR GUEST LIST
+          const seatingChart = [
+            { name: 'John Smith', table: 1, tableColor: 'Rose Gold' },
+            { name: 'Sarah Johnson', table: 1, tableColor: 'Rose Gold' },
+            { name: 'Michael Brown', table: 2, tableColor: 'Champagne' },
+            { name: 'Emily Davis', table: 2, tableColor: 'Champagne' },
+            { name: 'David Wilson', table: 3, tableColor: 'Blush' },
+            { name: 'Jennifer Martinez', table: 3, tableColor: 'Blush' },
+          ];
+
+          const handleSearch = () => {
+            const guest = seatingChart.find(
+              g => g.name.toLowerCase().includes(searchName.toLowerCase())
+            );
+            
+            if (guest) {
+              setFoundGuest(guest);
+              setNotFound(false);
+            } else {
+              setFoundGuest(null);
+              setNotFound(true);
+            }
+          };
+
+          const handleKeyPress = (e) => {
+            if (e.key === 'Enter') {
+              handleSearch();
+            }
+          };
+
+          return (
+            <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 p-4 md:p-8">
+              <div className="max-w-2xl mx-auto">
+                <div className="text-center mb-8 md:mb-12 pt-8">
+                  <div className="flex justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="#fda4af" stroke="#fda4af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                  </div>
+                  <h1 className="text-4xl md:text-5xl font-serif text-gray-800 mb-2">
+                    Find Your Seat
+                  </h1>
+                  <p className="text-lg text-gray-600 font-light">
+                    Welcome to our celebration
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-6">
+                  <div className="flex flex-col gap-4">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="Enter your name..."
+                        value={searchName}
+                        onChange={(e) => {
+                          setSearchName(e.target.value);
+                          setNotFound(false);
+                          setFoundGuest(null);
+                        }}
+                        onKeyPress={handleKeyPress}
+                        className="w-full px-4 py-3 pl-12 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-rose-300 text-lg"
+                      />
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-4 top-3.5 text-gray-400">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                      </svg>
+                    </div>
+                    
+                    <button
+                      onClick={handleSearch}
+                      className="w-full bg-gradient-to-r from-rose-400 to-pink-400 text-white py-3 rounded-lg font-medium text-lg hover:from-rose-500 hover:to-pink-500 transition-all duration-200 shadow-md hover:shadow-lg"
+                    >
+                      Find My Table
+                    </button>
+                  </div>
+                </div>
+
+                {foundGuest && (
+                  <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border-2 border-rose-200">
+                    <div className="text-center">
+                      <div className="mb-4">
+                        <div className="inline-block p-4 bg-rose-100 rounded-full">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                          </svg>
+                        </div>
+                      </div>
+                      
+                      <h2 className="text-2xl font-serif text-gray-800 mb-2">
+                        Welcome, {foundGuest.name}!
+                      </h2>
+                      
+                      <div className="my-6 p-6 bg-gradient-to-br from-rose-50 to-pink-50 rounded-xl">
+                        <p className="text-gray-600 mb-2">You're seated at</p>
+                        <div className="text-5xl font-bold text-rose-500 mb-2">
+                          Table {foundGuest.table}
+                        </div>
+                        <div className="flex items-center justify-center gap-2 text-gray-700">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                          </svg>
+                          <span className="font-medium">{foundGuest.tableColor}</span>
+                        </div>
+                      </div>
+                      
+                      <p className="text-gray-600 text-sm">
+                        Look for the {foundGuest.tableColor} table marker
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {notFound && (
+                  <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border-2 border-amber-200">
+                    <div className="text-center">
+                      <p className="text-gray-700 mb-2">
+                        We couldn't find that name in our guest list.
+                      </p>
+                      <p className="text-gray-600 text-sm">
+                        Please check the spelling or ask a member of the wedding party for assistance.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                <div className="text-center mt-8 text-gray-500 text-sm">
+                  <p>Thank you for celebrating with us! ♥</p>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        ReactDOM.render(<WeddingSeatFinder />, document.getElementById('root'));
+    </script>
+</body>
+</html>
+```
+
+- Click "Commit new file"
+
+### 4. **Enable GitHub Pages**
+- Go to your repository's "Settings" tab
+- Scroll down to "Pages" in the left sidebar
+- Under "Source", select "main" branch
+- Click "Save"
+- Wait 1-2 minutes
+
+### 5. **Get Your URL**
+Your site will be live at:
+```
+https://YOUR-USERNAME.github.io/wedding-seating/
